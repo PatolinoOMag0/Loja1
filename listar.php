@@ -12,7 +12,6 @@
                 <tr>
                     <th scope="col">ID</th>
                     <th scope="col">NOME</th>
-                    <th scope="col">Vulgo</th>
                     <th scope="col">PREÇO</th>
                     <th scope="col">QUANTIDADE</th>
                     <th scope="col">OPÇÕES  </th>
@@ -32,7 +31,7 @@
                         echo "
                         <td>
                             <div class='btn-group' role='group' aria-label='Basic mixed styles example'>
-                                <a href='#' type='button' class='btn btn-success'>Comprar</a>
+                                <a href='form_atualizar.php?id=".$produto['nome']."' type='button' class='btn btn-success'>Comprar</a>
                                 <a href='#' type='button' class='btn btn-outline-danger' for='vbtn-radio2'>Apagar</a>
                             </div>
                         </td>
