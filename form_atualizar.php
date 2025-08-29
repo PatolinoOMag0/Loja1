@@ -12,7 +12,9 @@
                 $sql = "SELECT * FROM produtos";
                 $stmt = $pdo->query($sql);
                 $produto = $stmt->fetch(PDO::FETCH_ASSOC);
-                print_r($produto);
+                // print_r($produto);
+
+                // echo $produto['nome'];
 
                 // while ($produto = $stmt->fetch(PDO::FETCH_ASSOC)) {
                 //     echo "ID: " . $produto['id'] . "<br>";
@@ -24,13 +26,14 @@
             ?>
             <form action= "inserir.php" method="POST">
                 <div class="mb-3">
-                    Nome: <input type="text" name="produto" class="form-control">
+                    Nome: <input value="<?php echo $produto['nome'];?>"
+                    type="text" name="produto" class="form-control">
                 </div>
                 <div class="mb-3">
-                    Preço: <input type="text" name="preco" class="form-control">
+                    Preço: <input value="<?php echo $produto['preco'];?>"class="form-control">
                 </div>
                 <div class="mb-3">
-                    Quantidade: <input type="text" name="quantidade" class="form-control">
+                    Quantidade: <input value="<?php echo $produto['quantidade'];?>" class="form-control">
                 </div>
                 <button type="submit" class=btn btn-primary>Atualizar</button>
             </form>
