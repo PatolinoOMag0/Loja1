@@ -1,18 +1,32 @@
 <?php
 require 'conexao.php';
-$nome = $_POST['produto'];
-$preco = $_POST['preco'];
-$estoque = $_POST['quantidade'];
 
-$sql = "INSERT INTO produtos (nome, preco, quantidade) VALUES (:nome, :preco, :quantidade)";
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $nome = trim($_POST['nome'] ?? '');
+    $descricao = trim($_POST['descricao'] ?? '');
+    $preco = floatval($_POST['preco'] ?? 0);
+    $quantidade = intval($_POST['quantidade'] ?? 0);
 
-$stmt = $pdo->prepare($sql);
-$stmt->bindParam(':nome', $nome);
-$stmt->bindParam(':preco', $preco);
-$stmt->bindParam(':quantidade', $estoque);
-if ($stmt->execute()) {
-    echo "Produto inserido com sucesso!";
-} else {
-    echo "Erro ao inserir produto.";
+    if ($nome === '' || $preco <= 0 || $quantidade < 0) {
+        echo "Preencha todos os campos corretamente.";
+        exit();
     }
-?>
+
+    try {
+        $stmt = $pdo->prepare("INSERT INTO produtos (nome, descricao, preco, quantidade) VALUES (:nome, :descricao, :preco, :quantidade)");
+        $stmt->execute([
+            ':nome' => $nome,
+            ':descricao' => $descricao,
+            ':preco' => $preco,
+            ':quantidade' => $quantidade
+        ]);
+
+        header("Location: sucesso.php");
+        exit();
+
+    } catch (PDOException $e) {
+        echo "Erro ao cadastrar: " . $e->getMessage();
+    }
+} else {
+    echo "Acesso inválido.";
+}

@@ -1,43 +1,61 @@
 <?php
-    include 'cabecalho.php';
+require 'conexao.php';
+
+$id = $_GET['id'] ?? null;
+
+if (!$id) {
+    echo "ID do produto não informado.";
+    exit();
+}
+
+// Buscar dados do produto
+$stmt = $pdo->prepare("SELECT * FROM produtos WHERE id = :id");
+$stmt->execute([':id' => $id]);
+$produto = $stmt->fetch(PDO::FETCH_ASSOC);
+
+if (!$produto) {
+    echo "Produto não encontrado.";
+    exit();
+}
 ?>
-    <body>
-        <div class="container">
-            <h2>ATUALIZAÇÃO DE PRODUTO</h2>
-            <?php
-                $id = $_GET['id'];
-                //echo "Recebi ==> $id";
 
-                require 'conexao.php';
-                $sql = "SELECT * FROM produtos";
-                $stmt = $pdo->query($sql);
-                $produto = $stmt->fetch(PDO::FETCH_ASSOC);
-                // print_r($produto);
+<?php include 'cabecalho.php'; ?>
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Atualizar Produto</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<main>
+    <form action="atualizar.php" method="post">
+        <!-- Botão de voltar -->
+        <a href="listar.php">
+            <button type="button" style="background-color:#6c757d; margin-bottom:10px;">Voltar para Listar Produtos</button>
+        </a>
 
-                // echo $produto['nome'];
+        <!-- Campos do formulário -->
+        <input type="hidden" name="id" value="<?= $produto['id'] ?>">
 
-                // while ($produto = $stmt->fetch(PDO::FETCH_ASSOC)) {
-                //     echo "ID: " . $produto['id'] . "<br>";
-                //     echo "Nome: " . $produto['nome'] . "<br>";
-                //     echo "Preço: R$" . $produto['preco'] . "<br>";
-                //     echo "Estoque: " . $produto['estoque'] . "<br><br>";
-                // }
+        <label for="nome">Nome:</label>
+        <input type="text" name="nome" id="nome" value="<?= htmlspecialchars($produto['nome']) ?>" required>
 
-            ?>
-            <form action= "inserir.php" method="POST">
-                <div class="mb-3">
-                    Nome: <input value="<?php echo $produto['nome'];?>"
-                    type="text" name="produto" class="form-control">
-                </div>
-                <div class="mb-3">
-                    Preço: <input value="<?php echo $produto['preco'];?>"class="form-control">
-                </div>
-                <div class="mb-3">
-                    Quantidade: <input value="<?php echo $produto['quantidade'];?>" class="form-control">
-                </div>
-                <button type="submit" class=btn btn-primary>Atualizar</button>
-            </form>
-        </div>
-        
-    </body>
+        <label for="descricao">Descrição:</label>
+        <textarea name="descricao" id="descricao" rows="3"><?= htmlspecialchars($produto['descricao']) ?></textarea>
+
+        <label for="preco">Preço:</label>
+        <input type="number" name="preco" id="preco" step="0.01" min="0.01" value="<?= $produto['preco'] ?>" required>
+
+        <label for="quantidade">Quantidade:</label>
+        <input type="number" name="quantidade" id="quantidade" min="0" value="<?= $produto['quantidade'] ?>" required>
+
+        <!-- Botão de atualizar -->
+        <button type="submit">Atualizar</button>
+    </form>
+</main>
+<footer>
+    Loja &copy; 2025
+</footer>
+</body>
 </html>
